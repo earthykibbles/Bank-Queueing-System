@@ -8,62 +8,12 @@
 
 int main()
 {
-	int systime = 1000;
-	// Create 7 Queues for 7 Reasons
+	Server* server = new Server;
 
-	//Create a vector of queues
-	std::queue<Client> clientqueues;
-
-	Reason reason;
-
-	// Generate Servers
-	int totalservers = 5;
-	std::vector<Server> servers;
-
-	for (int i = 0; i < totalservers; i++) {
-		Server server;
-		servers.push_back(server);
+	for (int i = 0; i < 10; i++) {
+		Client* client = new Client(*server);
 	}
 
+	server->callNext();
 
-	while (systime != 0) {
-
-		// Generate clients in a poisson distribution
-		std::random_device rd;
-		std::mt19937 gen(rd());
-		double mean = 0.0833;
-		std::poisson_distribution<int> poisson_dist(mean);
-
-		int value = poisson_dist(gen);
-
-		for (int i = 0; i < value; i++) {
-			Client client(systime);
-			client.arrive();
-		}
-
-		if (clientqueue.size() > servers.size()) {
-			for (auto& server : servers) {
-				if (server.isServerBusy()) {
-					server.serve();
-				}
-				else {
-
-					// Requires fix, this should only run on the second task of callNext
-
-					/*if (clientqueue.size() > 3) {
-						server.wrapTask(systime);
-					}*/
-					server.callNext(clientqueue, systime);
-				}
-			}
-		}
-
-
-		systime--;
-	}
-	std::cout << "Current Queue Size" << "\t" << clientqueue.size() << "\n";
-
-	for (auto& server : servers) {
-		std::cout << "Total clients served" << "\t" << server.clients_served << "\n";
-	}
 }
